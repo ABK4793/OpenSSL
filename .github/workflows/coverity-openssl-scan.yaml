@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  COV_URL: ${{ env.COVERITY_URL }}
+  COV_URL: ${{ vars.COVERITY_URL }}
   COV_USER: ${{ secrets.COVERITY_USER }}
   COV_PASSPHRASE: ${{ secrets.COVERITY_PASSPHRASE }}
   COVERITY_PROJECT_NAME: ${{ secrets.COVERITY_PROJECT_NAME || 'openssl-project' }}
@@ -35,7 +35,7 @@ jobs:
       - name: Coverity Scan (using build script)
         uses: blackduck-inc/black-duck-security-scan@v2.0.0
         with:
-          coverity_url: ${{ env.COV_URL }}
+          coverity_url: ${{ vars.COVERITY_URL }}
           coverity_user: ${{ secrets.COV_USER }}
           coverity_passphrase: ${{ secrets.COV_PASSPHRASE }}
 
