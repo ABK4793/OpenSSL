@@ -2,7 +2,7 @@ name: Coverity Scan OpenSSL (Using Build Script)
 
 on:
   push:
-    branches: [ main, master, develop, stage, release, run_patch_1 ]
+    branches: [ main, master, develop, stage, release, run_patch_1 , run_patch_2.1]
   pull_request:
     branches: [ main, master, develop, stage, release ]
   workflow_dispatch:
