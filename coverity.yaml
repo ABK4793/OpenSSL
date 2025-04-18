@@ -8,7 +8,7 @@ analyze:
 capture:
   build:
     # clean-command: mvn -B clean
-    build_command: "./Configure --prefix=/usr/local/ssl --openssldir=/usr/local/ssl '-Wl,-rpath,$(LIBRPATH)' && make
+    build_command: "./Configure --prefix=/usr/local/ssl --openssldir=/usr/local/ssl '-Wl,-rpath,$(LIBRPATH)' && make"
   # build:
   #   clean-command: mvn -B clean
   #   build-command: mvn -B -DskipTests package
