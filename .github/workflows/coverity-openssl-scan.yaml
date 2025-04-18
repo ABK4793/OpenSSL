@@ -38,7 +38,7 @@ jobs:
         with:
           coverity_url: ${{ vars.COVERITY_URL }}
           coverity_user: ${{ secrets.COV_USER }}
-          coverity_passphrase: ${{ secrets.COV_PASSPHRASE }}
+          coverity_passphrase: ${{ secrets.COVERITY_PASSPHRASE }}
 
           # * Point to the build script *
           coverity_build_command: ".github/scripts/build-openssl-coverity.sh"
