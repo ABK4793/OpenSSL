@@ -8,7 +8,7 @@ echo "--- Starting OpenSSL Build Script for Coverity ---"
 
 # Run the configuration step required by OpenSSL
 echo "Running OpenSSL Configure..."
-./Configure
+./Configure '-Wl,-rpath,$(LIBRPATH)'
 # --prefix=/usr/local/ssl --openssldir=/usr/local/ssl '-Wl,-rpath,$(LIBRPATH)'
 echo "OpenSSL Configure finished successfully."
 
