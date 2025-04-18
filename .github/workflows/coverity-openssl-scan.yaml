@@ -25,6 +25,7 @@ jobs:
       - name: Install OpenSSL Build Dependencies
         run: |
           sudo apt-get update -y
+          sudo apt-get install -y perl
           sudo apt-get install -y perl build-essential
 
       # Make the build script executable (alternative to git chmod)
