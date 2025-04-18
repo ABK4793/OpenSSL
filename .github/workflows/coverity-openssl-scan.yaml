@@ -2,7 +2,7 @@ name: Coverity Scan OpenSSL (Using Build Script)
 
 on:
   push:
-    branches: [ main, master, develop, stage, release,run_patch_1 ]
+    branches: [ main, master, develop, stage, release, run_patch_1 ]
   pull_request:
     branches: [ main, master, develop, stage, release ]
   workflow_dispatch:
@@ -29,7 +29,7 @@ jobs:
 
       # Make the build script executable (alternative to git chmod)
       - name: Make build script executable
-        if: hash ./.github/scripts/build-openssl-coverity.sh 2>/dev/null # Check if script exists
+        # if: hash ./.github/scripts/build-openssl-coverity.sh 2>/dev/null # Check if script exists
         run: chmod +x .github/scripts/build-openssl-coverity.sh
 
       # The action wraps the command specified in build_command
