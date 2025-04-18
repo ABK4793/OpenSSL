@@ -7,12 +7,12 @@ on:
     branches: [ main, master, develop, stage, release ]
   workflow_dispatch:
 
-env:
-  COV_URL: ${{ vars.COVERITY_URL }}
-  COV_USER: ${{ secrets.COVERITY_USER }}
-  COV_PASSPHRASE: ${{ secrets.COVERITY_PASSPHRASE }}
-  COVERITY_PROJECT_NAME: ${{ secrets.COVERITY_PROJECT_NAME || 'openssl-project' }}
-  OPENSSL_VERSION: "3.0.13" # Example
+# env:
+#   COV_URL: ${{ vars.COVERITY_URL }}
+#   COV_USER: ${{ secrets.COVERITY_USER }}
+#   COV_PASSPHRASE: ${{ secrets.COVERITY_PASSPHRASE }}
+#   COVERITY_PROJECT_NAME: ${{ secrets.COVERITY_PROJECT_NAME || 'openssl-project' }}
+#   OPENSSL_VERSION: "3.0.13" # Example
 
 jobs:
   coverity_scan_openssl:
@@ -36,9 +36,9 @@ jobs:
       - name: Coverity Scan (using build script)
         uses: blackduck-inc/black-duck-security-scan@v2.0.0
         with:
-          coverity_url: ${{ env.COVERITY_URL }}
-          coverity_user: ${{ env.COV_USER }}
-          coverity_passphrase: ${{ env.COV_PASSPHRASE }}
+          coverity_url: ${{ vars.COVERITY_URL }}
+          coverity_user: ${{ secrets.COV_USER }}
+          coverity_passphrase: ${{ secrets.COV_PASSPHRASE }}
 
           # * Point to the build script *
           coverity_build_command: ".github/scripts/build-openssl-coverity.sh"
