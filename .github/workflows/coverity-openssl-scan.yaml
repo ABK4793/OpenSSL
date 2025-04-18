@@ -29,18 +29,19 @@ jobs:
 
       # Make the build script executable (alternative to git chmod)
       - name: Make build script executable
+        if: hash ./.github/scripts/build-openssl-coverity.sh 2>/dev/null # Check if script exists
         run: chmod +x .github/scripts/build-openssl-coverity.sh
 
       # The action wraps the command specified in build_command
       - name: Coverity Scan (using build script)
         uses: blackduck-inc/black-duck-security-scan@v2.0.0
         with:
-          coverity_url: ${{ vars.COVERITY_URL }}
-          coverity_user: ${{ secrets.COV_USER }}
-          coverity_passphrase: ${{ secrets.COV_PASSPHRASE }}
+          coverity_url: ${{ env.COVERITY_URL }}
+          coverity_user: ${{ env.COV_USER }}
+          coverity_passphrase: ${{ env.COV_PASSPHRASE }}
 
           # * Point to the build script *
-          build_command: ".github/scripts/build-openssl-coverity.sh"
+          coverity_build_command: ".github/scripts/build-openssl-coverity.sh"
 
           # Ensure cloud analysis settings are appropriate (coverity.yaml has analyze.location=connect)
           # coverity_local: false # Default is false
