@@ -1,0 +1,74 @@
+name: coverity-openssl-scan
+
+on:
+  push:
+    branches: [ main, master, develop, stage, release ]
+  pull_request:
+    branches: [ main, master, develop, stage, release ]
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  coverity_scan_openssl:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout OpenSSL Source Code
+      uses: actions/checkout@v4
+      # Assumes the OpenSSL source code is in the repository triggering this action
+
+    - name: Install OpenSSL Build Dependencies
+      run: |
+        echo "Updating package lists..."
+        sudo apt-get update -y
+        echo "Installing Perl..."
+        sudo apt-get install -y perl
+        echo "Installing build-essential..."
+        sudo apt-get install -y build-essential
+        echo "Dependencies installed."
+
+    # NOTE: The coverity scan action below implicitly wraps the build command.
+    # We provide the sequence Configure && make as the build process.
+    # The action should handle invoking Coverity's build capture around this.
+    - name: Coverity Scan (Cloud Analysis)
+      uses: blackduck-inc/black-duck-security-scan@v2.0.0
+      with:
+        # Required: URL of your Coverity Connect instance
+        coverity_url: ${{ vars.COVERITY_URL }} # Use GitHub variables/secrets
+
+        # Required: Authentication - Use secrets for credentials
+        coverity_user: ${{ secrets.COV_USER }}
+        coverity_passphrase: ${{ secrets.COVERITY_PASSPHRASE }}
+        # Alternative: coverity_auth_key: ${{ secrets.COVERITY_AUTH_KEY_FILE_CONTENTS }}
+
+        # --- Coverity Scan configuration specific to this OpenSSL build ---
+
+        # Tell the action how to build the project. Coverity needs to capture this.
+        # We chain the configure and make commands. 'make all' is often equivalent to 'make'.
+        # The action should wrap this entire command string with Coverity's build tools.
+        # build_command: "./Configure --prefix=/usr/local/ssl --openssldir=/usr/local/ssl '-Wl,-rpath,$(LIBRPATH)' && make"
+
+        # Optional: Specify a clean command if needed before the build
+        # clean_command: "make clean" # Uncomment if a 'make clean' is desired first
+
+        # Ensure cloud analysis is intended (should be default for the action unless coverity_local:true)
+        # coverity_local: false # Explicitly false or omitted for cloud analysis
+
+        # --- Standard Policy/PR Commenting Options ---
+
+        # Optional: Specify a policy view for commit checks on push events (not PRs)
+        coverity_policy_view: ${{ github.event_name != 'pull_request' && 'Outstanding Issues' || '' }}
+
+        # Optional: Enable comments on Pull Requests
+        coverity_prComment_enabled: true
+        github_token: ${{ secrets.GITHUB_TOKEN }} # Required if coverity_prComment_enabled is true
+
+        # Optional: Upload diagnostics if needed
+        # include_diagnostics: true
+
+    # Optional: Upload Coverity logs for debugging if needed
+    # - name: Save Coverity Logs
+    #   if: always() # Run even if the scan step fails
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: bridge-logs-${{ github.run_id }}
+    #     path: ${{ github.workspace }}/.bridge # Default log location for the action
+    #     if-no-files-found: ignore
