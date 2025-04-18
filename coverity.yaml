@@ -1,20 +1,8 @@
-
-analyze:
-  checkers:
-    webapp-security:
-      enabled: true
-
-
 capture:
   build:
     # clean-command: mvn -B clean
-    build_command: "./Configure --prefix=/usr/local/ssl --openssldir=/usr/local/ssl '-Wl,-rpath,$(LIBRPATH)' && make"
-  # build:
-  #   clean-command: mvn -B clean
-  #   build-command: mvn -B -DskipTests package
+    build-command: "./Configure --prefix=/usr/local/ssl --openssldir=/usr/local/ssl '-Wl,-rpath,$(LIBRPATH)' && make"
 
-#  files:
-#    exclude-regex: ".*/NullReturnsExample\\.java$"
       
 analyze:
   aggressiveness-level: high
