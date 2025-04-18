@@ -10,7 +10,7 @@
 ##  Configure -- OpenSSL source tree configuration script
 
 
-echo "-----------Running OpenSSL Configure... from inside Cofigure"
+# echo "-----------Running OpenSSL Configure... from inside Cofigure"
 require 5.10.0;
 use strict;
 use Config;
