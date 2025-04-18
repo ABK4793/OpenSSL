@@ -1,0 +1,60 @@
+name: Coverity Scan OpenSSL (Using Build Script)
+
+on:
+  push:
+    branches: [ main, master, develop, stage, release,run_patch_1 ]
+  pull_request:
+    branches: [ main, master, develop, stage, release ]
+  workflow_dispatch:
+
+env:
+  COV_URL: ${{ env.COVERITY_URL }}
+  COV_USER: ${{ secrets.COVERITY_USER }}
+  COV_PASSPHRASE: ${{ secrets.COVERITY_PASSPHRASE }}
+  COVERITY_PROJECT_NAME: ${{ secrets.COVERITY_PROJECT_NAME || 'openssl-project' }}
+  OPENSSL_VERSION: "3.0.13" # Example
+
+jobs:
+  coverity_scan_openssl:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout OpenSSL Source Code
+        uses: actions/checkout@v4
+        # Checks out the repo containing the build script and coverity.yaml
+
+      - name: Install OpenSSL Build Dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y perl build-essential
+
+      # Make the build script executable (alternative to git chmod)
+      - name: Make build script executable
+        run: chmod +x .github/scripts/build-openssl-coverity.sh
+
+      # The action wraps the command specified in build_command
+      - name: Coverity Scan (using build script)
+        uses: blackduck-inc/black-duck-security-scan@v2.0.0
+        with:
+          coverity_url: ${{ env.COV_URL }}
+          coverity_user: ${{ secrets.COV_USER }}
+          coverity_passphrase: ${{ secrets.COV_PASSPHRASE }}
+
+          # * Point to the build script *
+          build_command: ".github/scripts/build-openssl-coverity.sh"
+
+          # Ensure cloud analysis settings are appropriate (coverity.yaml has analyze.location=connect)
+          # coverity_local: false # Default is false
+
+          # Standard Policy/PR Commenting Options
+          coverity_policy_view: ${{ github.event_name != 'pull_request' && 'Outstanding Issues' || '' }}
+          coverity_prComment_enabled: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    # Optional: Upload logs
+    # - name: Save Logs
+    #   if: always()
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: bridge-logs-${{ github.run_id }}
+    #     path: ${{ github.workspace }}/.bridge
+    #     if-no-files-found: ignore
