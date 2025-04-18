@@ -8,13 +8,20 @@ echo "--- Starting OpenSSL Build Script for Coverity ---"
 
 # Run the configuration step required by OpenSSL
 echo "Running OpenSSL Configure..."
-./Configure --prefix=/usr/local/ssl --openssldir=/usr/local/ssl '-Wl,-rpath,$(LIBRPATH)'
+./Configure
+# --prefix=/usr/local/ssl --openssldir=/usr/local/ssl '-Wl,-rpath,$(LIBRPATH)'
 echo "OpenSSL Configure finished successfully."
+
+
+echo "Running make "
+make 
+echo "Make all finished successfully."
+
 
 # Run the main build command (e.g., make all)
 # This is the part Coverity's build capture needs to monitor
-echo "Running make all..."
-make all
+echo "Running make test..."
+make test
 echo "Make all finished successfully."
 
 echo "--- OpenSSL Build Script Finished Successfully ---"
